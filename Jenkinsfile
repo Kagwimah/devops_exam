@@ -6,12 +6,12 @@ node {
     }
     stage('Build a docker image') {
 
-        sh "docker build -t docker_exam:0.1 ."	
+        sh "docker build -t docker_exam:1.0 ."	
     }
     stage('Push image to dockerhub') {
         sh "docker login  -u 'kagwima' -p 'K@d506112007' "	
-        sh "docker tag DOCKER_TEST:0.1 kagwima/docker_test:latest"
-        sh "docker push kagwima/docker_test:latest"
+        sh "docker tag docker_exam:0.1 kagwima/docker_exam:1.0"
+        sh "docker push kagwima/docker_exam:1.0"
     }
     stage('Deploy docker'){
         sh "docker run docker_exam:0.1 -p 80:6452"
