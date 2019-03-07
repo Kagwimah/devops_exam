@@ -14,7 +14,7 @@ node {
         sh "docker push kagwima/docker_test:latest"
     }
     stage('Deploy'){
-        sh "docker run docker_exam:0.1 -p 80:6452"
-    }
+        sh "docker run -d docker_exam:0.1 -p 80:6452/tcp"
+         }
 
 }
