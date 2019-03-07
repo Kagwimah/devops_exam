@@ -1,40 +1,20 @@
+node {
 
-// Initialize a LinkedHashMap / object to share between stages
-def pipelineContext = [:]
+    stage('Clone the repository')
+    {
+        checkout scm
+    }
+    stage('Build a docker image') {
 
-pipeline {
-    agent any
-
-    environment {
-        DOCKER_IMAGE_TAG = "my-app:build-${env.BUILD_ID}"
+        sh "docker build -t docker_exam:0.1 ."	
+    }
+    stage('Push image to dockerhub') {
+        sh "docker login  -u 'kagwima' -p 'K@d506112007' "	
+        sh "docker tag DOCKER_TEST:0.1 kagwima/docker_test:latest"
+        sh "docker push kagwima/docker_test:latest"
+    }
+    stage('Deploy'){
+        sh "docker run docker_exam:0.1 -p 80:6452"
     }
 
-    stages {
-        stage('Configure') {
-            steps {
-                echo 'Create parameters file'
-            }
-        }
-        stage('Build') {
-            steps {
-                echo "Build docker image"
-                script {
-                    dockerImage = docker.build("${env.DOCKER_IMAGE_TAG}",  '-f ./Dockerfile .')
-                    pipelineContext.dockerImage = dockerImage
-                }
-            }
-        }
-        stage('Run') {
-            steps {
-                echo "Run docker image"
-                script {
-                    pipelineContext.dockerContainer = pipelineContext.dockerImage.run()
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                echo "Testing the app"
-            }
-        }
-    }
+}
