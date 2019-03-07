@@ -10,8 +10,8 @@ node {
     }
     stage('Push image to dockerhub') {
         sh "docker login  -u 'kagwima' -p 'K@d506112007' "	
-        sh "docker tag DOCKER_TEST:0.1 kagwima/docker_test:latest"
-        sh "docker push kagwima/docker_test:latest"
+        sh "docker tag docker_exam:0.1 kagwima/docker_exam:latest"
+        sh "docker push kagwima/docker_exam:latest"
     }
     stage('Deploy'){
         sh "docker run -d docker_exam:0.1 -p 80:6452/tcp"
